@@ -2,7 +2,7 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://i.imgur.com/vDeRbsC.png" width="160" alt="BitScape Logo" /></a>
 </p>
 
-## Work in Progres...
+## Work in Progress...
 
 ## Project setup
 

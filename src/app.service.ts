@@ -146,7 +146,7 @@ export class AppService {
         "socket": "AM4",
         "arq": "Zen 3",
         "process": "7nm",
-        "l3": "96 MB",
+        "l3": "96 MB (Con tecnologia 3D V-cache)",
         "year": "2022",
         "igpu": "No"
       },
@@ -1046,10 +1046,10 @@ export class AppService {
     ]
   }
 
+// Funciones de prueba
   find(p1:string,p2:string): string{
     return this[p1][p2];
   }
-
   findByThing(p1:string): string{
     return this[p1];
   }
