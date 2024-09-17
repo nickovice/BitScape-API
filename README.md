@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://i.imgur.com/vDeRbsC.png" width="160" alt="BitScape Logo" /></a>
+  <a target="blank"><img src="https://i.imgur.com/vDeRbsC.png" width="250" /></a>
 </p>
 
 ## Work in Progress...
