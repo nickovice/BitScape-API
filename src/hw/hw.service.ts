@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
+import { FilterCpuDto } from './dto/filterCpu.dto';
 
 @Injectable()
 export class HwService {
@@ -1915,16 +1916,133 @@ export class HwService {
     }
   }
 
-  wtf() {
-    return "Qué buscas acá?"
+
+// -------- Methods: search, filters, etc -------------
+
+  searchCpu(filterDto: FilterCpuDto) {
+    const { brand, name } = filterDto;
+    const architectures = ['zen', 'zen+', 'zen2', 'zen3', 'zen4'];
+    let filteredCpus = []
+    for (const a of architectures) {
+      if (this[brand][a]) {
+        filteredCpus = filteredCpus.concat(this[brand][a]);
+      }
+    }
+    filteredCpus = filteredCpus.filter(cpu => cpu.name.toLowerCase().includes(name.toLowerCase()));
+    return filteredCpus;
+  }
+  filterCpuByArq(filterDto: FilterCpuDto) {
+    const { brand, arq } = filterDto;
+    return this[brand][arq];
+  }
+  filterCpuByCores(filterDto: FilterCpuDto) {
+    const { brand, cores } = filterDto;
+    const architectures = ['zen', 'zen+', 'zen2', 'zen3', 'zen4'];
+    let filteredCpus = []
+    for (const a of architectures) {
+      if (this[brand][a]) {
+        filteredCpus = filteredCpus.concat(this[brand][a]);
+      }
+    }
+    filteredCpus = filteredCpus.filter(cpu => cpu.cores === cores);
+    return filteredCpus;
+  }
+  filterCpuByThreads(filterDto: FilterCpuDto) {
+    const { brand, threads } = filterDto;
+    const architectures = ['zen', 'zen+', 'zen2', 'zen3', 'zen4'];
+    let filteredCpus = []
+    for (const a of architectures) {
+      if (this[brand][a]) {
+        filteredCpus = filteredCpus.concat(this[brand][a]);
+      }
+    }
+    filteredCpus = filteredCpus.filter(cpu => cpu.threads === threads);
+    return filteredCpus;
+  }
+  filterCpuBySocket(filterDto: FilterCpuDto) {
+    const { brand, socket } = filterDto;
+    const architectures = ['zen', 'zen+', 'zen2', 'zen3', 'zen4'];
+    let filteredCpus = []
+    for (const a of architectures) {
+      if (this[brand][a]) {
+        filteredCpus = filteredCpus.concat(this[brand][a]);
+      }
+    }
+    filteredCpus = filteredCpus.filter(cpu => cpu.socket === socket);
+    return filteredCpus;
+  }
+  filterCpuByIgpu(filterDto: FilterCpuDto) {
+    const { brand, igpu } = filterDto;
+    const architectures = ['zen', 'zen+', 'zen2', 'zen3', 'zen4'];
+    let filteredCpus = []
+    for (const a of architectures) {
+      if (this[brand][a]) {
+        filteredCpus = filteredCpus.concat(this[brand][a]);
+      }
+    }
+    filteredCpus = filteredCpus.filter(cpu => cpu.igpu === igpu);
+    return filteredCpus;
   }
 
-  // ------- Funciones de prueba ----------
-  findd(p1: string, p2: string): string {
+  // ----------------- testing methods -----------------------
+  find2p(p1: string, p2: string): string {
     return this[p1][p2];
   }
-  finddByThing(p1: string): string {
+  find1p(p1: string): string {
     return this[p1];
   }
-  // --------------------------------------
+  find4p(p1: string, p2: string, p3: string, p4: string): string {
+    return this[p1][p2][p3].filter(obj => obj.tdp == p4)
+  }
+  wtf() {
+    return "que buscas acá?";
+  }
+  //-----------------------------------------------------------
+
+
+  /* blablabla(filterDto: FilterCpuDto) {
+    const { brand, name, cores, threads, maxfrec, tdp, socket, arq, process, l3, year, igpu } = filterDto;
+ 
+    let filteredCpus = this[brand][arq];
+ 
+    
+      if (name) {
+        filteredCpus = filteredCpus.filter(cpu => cpu.name === name);
+      }
+      if (cores) {
+        filteredCpus = filteredCpus.filter(cpu => cpu.cores === cores);
+      }
+      if (threads) {
+        filteredCpus = filteredCpus.filter(cpu => cpu.threads === threads);
+      }
+      if (maxfrec) {
+        filteredCpus = filteredCpus.filter(cpu => cpu.maxfrec === maxfrec);
+      }
+      if (tdp) {
+        filteredCpus = filteredCpus.filter(cpu => cpu.tdp === tdp);
+      }
+      if (socket) {
+        filteredCpus = filteredCpus.filter(cpu => cpu.socket === socket);
+      }
+      if (arq) {
+        filteredCpus = filteredCpus.filter(cpu => cpu.arq === arq);
+      }
+      if (process) {
+        filteredCpus = filteredCpus.filter(cpu => cpu.process === process);
+      }
+      if (l3) {
+        filteredCpus = filteredCpus.filter(cpu => cpu.l3 === l3);
+      }
+      if (year) {
+        filteredCpus = filteredCpus.filter(cpu => cpu.year === year);
+      }
+      if (igpu) {
+        filteredCpus = filteredCpus.filter(cpu => cpu.igpu === igpu);
+      }
+ 
+      return filteredCpus;
+    
+  }
+   */
+
 }
