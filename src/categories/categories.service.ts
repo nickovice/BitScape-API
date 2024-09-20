@@ -1,11 +1,15 @@
-import { Injectable } from '@nestjs/common';
+/* eslint-disable prettier/prettier */
+import { Injectable, forwardRef, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { ProductsService } from '../products/products.service';
 
 @Injectable()
 export class CategoriesService {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(
+    @Inject(forwardRef(() => ProductsService))
+    private readonly productsService: ProductsService
+  ) { }
 
-  private category = [
+  private categories = [
     {
       id: 1,
       name: 'amd_cpu',
@@ -64,18 +68,25 @@ export class CategoriesService {
     },
   ];
 
-  findOne(name: string): number {
-    const object = this.category.find((obj) => obj.name === name);
-    return object.id;
+  findByName(name: string): number {
+    const object = this.categories.find((obj) => obj.name === name);
+    if (!object) {
+      throw new HttpException('Categoria no encontrada', HttpStatus.NOT_FOUND);
+    }
+    return object.id
   }
 
   findCategory(cat: string) {
-    const category = this.findOne(cat);
+    const category = this.findByName(cat);
     return category;
   }
 
   getCategory(cat: string) {
     const id = this.findCategory(cat);
-    return this.productsService.filterByCategory(id);
+    return this.productsService.filterByCategoryV2(id);
+  }
+
+  filter(name: string) {
+    return this.categories.find((obj) => obj.name === name);
   }
 }

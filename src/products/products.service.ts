@@ -1,11 +1,17 @@
 /* eslint-disable prettier/prettier */
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, forwardRef, Inject } from '@nestjs/common';
 import { FilterDto } from './dto/filter.dto';
 import { CreateProductDto } from './dto/createProduct.dto';
 import { UpdateProductDto } from './dto/updateProduct.dto';
+import { CategoriesService } from '../categories/categories.service';
 
 @Injectable()
 export class ProductsService {
+  constructor(
+    @Inject(forwardRef(() => CategoriesService)) 
+    private readonly categoriesService: CategoriesService
+  ) {}
+
   private products = [
     // AMD CPUs
     {
@@ -2404,16 +2410,19 @@ export class ProductsService {
     return this.products.find((product) => product.id === Number(id));
   }
 
-  filterByCategory(id_category: number){
-    return this.products.filter((product) => product.id_category=== id_category);
+  filterByCategory(id_category: any){
+    const result = this.categoriesService.findByName(id_category);
+    return this.products.filter((obj) => obj.id_category === result);
+  }
+
+  filterByCategoryV2(id_category: any){
+    return this.products.filter((obj) => obj.id_category === id_category);
   }
 
   filter(filterDto: FilterDto): any {
     const { id, id_category, brand } = filterDto;
     if (id_category) {
-      return this.products.filter(
-        (product) => product.id_category === Number(id_category),
-      );
+      return this.filterByCategory(id_category);
     }
     if (id) {
       return this.products.find((product) => product.id === Number(id));
