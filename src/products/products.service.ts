@@ -2,6 +2,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { FilterDto } from './dto/filter.dto';
 import { CreateProductDto } from './dto/createProduct.dto';
+import { UpdateProductDto } from './dto/updateProduct.dto';
 
 @Injectable()
 export class ProductsService {
@@ -2399,6 +2400,14 @@ export class ProductsService {
   ];
 
   // Methods
+  findOne(id: number) {
+    return this.products.find((product) => product.id === Number(id));
+  }
+
+  filterByCategory(id_category: number){
+    return this.products.filter((product) => product.id_category=== id_category);
+  }
+
   filter(filterDto: FilterDto): any {
     const { id, id_category, brand } = filterDto;
     if (id_category) {
@@ -2415,12 +2424,14 @@ export class ProductsService {
       );
     }
   }
+
   search(filterDto: FilterDto) {
     const { name } = filterDto;
     return this.products.filter((product) =>
       product.name.toLowerCase().includes(name.toLowerCase()),
     );
   }
+
   sort(filterDto: FilterDto) {
     const { id_category, sort } = filterDto;
     let result = [];
@@ -2434,6 +2445,7 @@ export class ProductsService {
       return result.sort((a, b) => b.price - a.price);
     }
   }
+
   create(createProductDto: CreateProductDto) {
     const nextId = this.products[this.products.length - 1].id + 1;
     const product = {
@@ -2452,5 +2464,26 @@ export class ProductsService {
     if (!product) throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     const pos = this.products.indexOf(product);
     this.products.splice(pos, 1);
+  }
+
+  update(id: number, updateProductDto: UpdateProductDto) {
+    if (
+      !updateProductDto.id_category ||
+      !updateProductDto.brand ||
+      !updateProductDto.name ||
+      !updateProductDto.price ||
+      !updateProductDto.info
+    ) {
+      throw new HttpException('Faltan datos', HttpStatus.NOT_FOUND);
+    } 
+    else {
+      const product = this.filter({id:id});
+      product.id_category = updateProductDto.id_category;
+      product.brand = updateProductDto.brand;
+      product.name = updateProductDto.name;
+      product.price = updateProductDto.price;
+      product.info = updateProductDto.info;
+      return 'Producto actualizado :)';
+    }
   }
 }
