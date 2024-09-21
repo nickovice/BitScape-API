@@ -9,6 +9,10 @@ import { UpdateProductDto } from './dto/updateProduct.dto';
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
+  @Get()
+  getHello(): string {
+    return this.productsService.getHello();
+  }
   @Get('filter') //filter? (id, id_category, brand)
   filter(@Query() filterDto: FilterDto) {
     return this.productsService.filter(filterDto);

@@ -2495,4 +2495,8 @@ export class ProductsService {
       return 'Producto actualizado :)';
     }
   }
+
+  getHello() {
+    return "Hola! Esta es la seccion de productos";
+  }
 }

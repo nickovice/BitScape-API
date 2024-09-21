@@ -5,8 +5,18 @@ import { CategoriesService } from './categories.service';
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
+  @Get()
+  getHello(): string {
+    return this.categoriesService.getHello();
+  }
+
   @Get(':id')
   getCategory(@Param('id') id: string) {
     return this.categoriesService.getCategory(id);
+  }
+
+  @Get('findAll')
+  findAll() {
+    return this.categoriesService.findAll();
   }
 }
