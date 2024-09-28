@@ -18,6 +18,7 @@ export class ProductsService {
   ) { }
 
   //Modifications to database
+
   create(createProductDto: CreateProductDto) {
     const product = this.productRepo.create(createProductDto);
     return this.productRepo.save(product);
@@ -59,7 +60,8 @@ export class ProductsService {
   }
 
 
-  //filters
+  //Filters
+
   findAll() {
     return this.productRepo.find();
   }

@@ -5,4 +5,5 @@ export interface UpdateProductDto {
   name: string;
   price: number;
   info: string;
+  image: string;
 }

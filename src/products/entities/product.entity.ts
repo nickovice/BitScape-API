@@ -21,4 +21,7 @@ export class Product {
     @Column()
     public info: string;
 
+    @Column({ nullable: true })
+    public image: string;
+
 }

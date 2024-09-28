@@ -5,4 +5,5 @@ export interface CreateProductDto {
   name: string;
   price: number;
   info: string;
+  image: string;
 }

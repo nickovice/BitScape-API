@@ -34,19 +34,19 @@
 
 ### CATEGORIES
 
-### 1. GET /categories
-- **Description**: Retrieves all categories.
+### 1. GET /api/categories
+- **Description**: Returns all categories.
 
-### 2. GET /categories/:id
-- **Description**: Retrieves a specific category by ID.
+### 2. GET  /api/categories/:id
+- **Description**: Returns a specific category by ID.
 
-### 3. POST /categories
+### 3. POST  /api/categories
 - **Description**: Creates a new category.
 
-### 4. PUT /categories/:id
+### 4. PUT  /api/categories/:id
 - **Description**: Updates a category by ID.
 
-### 5. DELETE /categories/:id
+### 5. DELETE  /api/categories/:id
 - **Description**: Deletes a category by ID.
 
 
