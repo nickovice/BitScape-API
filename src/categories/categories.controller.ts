@@ -13,9 +13,9 @@ export class CategoriesController {
     return this.categoriesService.findAll();
   }
 
-  @Get(':id')
-  getCategory(@Param('id') id: string) {
-    return this.categoriesService.filter(id);
+  @Get(':name')
+  getCategory(@Param('name') name: string) {
+    return this.categoriesService.filter(name);
   }
 
   @Post() //  /categories (sin id)
@@ -23,7 +23,7 @@ export class CategoriesController {
     return this.categoriesService.create(createCategoryDto);
   }
 
-  @Delete(':id') //products/id
+  @Delete(':id') //categories/id
   delete(@Param('id') id: number) {
     return this.categoriesService.delete(id);
   }

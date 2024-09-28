@@ -8,45 +8,45 @@
 
 ### PRODUCTS
 
-### 1. GET /api/products
+### 1. GET /products
 - **Description**: Returns all products.
 
-### 2. GET /api/products/search?name={name}
+### 2. GET /products/search?name={name}
 - **Description**: Searches for products by name.
 
-### 3. GET /api/products/filter?id_category={id}&brand={brand}
+### 3. GET /products/filter?id_category={id} or brand={brand}
 - **Description**: Filters products by category or brand.
 
-### 4. GET /api/products/sort?id_category={id}&sort={asc/desc}
+### 4. GET /products/sort?id_category={id}&sort={asc/desc}
 - **Description**: Sorts products by category and ascending/descending order.
 
-### 5. GET /api/products/:id
+### 5. GET /products/:id
 - **Description**: Returns a product by ID.
 
-### 6. POST /api/products
+### 6. POST /products
 - **Description**: Creates a new product. It's not necessary to put id on body
 
-### 7. PUT /api/products/:id
+### 7. PUT /products/:id
 - **Description**: Updates a product by ID.
 
-### 8. DELETE /api/products/:id
+### 8. DELETE /products/:id
 - **Description**: Deletes a product by ID.
 
 ### CATEGORIES
 
-### 1. GET /api/categories
+### 1. GET /categories
 - **Description**: Returns all categories.
 
-### 2. GET  /api/categories/:id
-- **Description**: Returns a specific category by ID.
+### 2. GET  /categories/:name
+- **Description**: Returns a specific category by name.
 
-### 3. POST  /api/categories
+### 3. POST  /categories
 - **Description**: Creates a new category.
 
-### 4. PUT  /api/categories/:id
+### 4. PUT  /categories/:id
 - **Description**: Updates a category by ID.
 
-### 5. DELETE  /api/categories/:id
+### 5. DELETE  /categories/:id
 - **Description**: Deletes a category by ID.
 
 
