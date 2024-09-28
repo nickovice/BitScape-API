@@ -6,8 +6,7 @@ services:
     volumes:
       - './postgres_data:/var/lib/postgresql/data'
     environment:
-      - POSTGRES_PASSWORD=123456
-#      - POSTGRES_DB=bitscape 
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
       - '5432:5432'
   adminer:
