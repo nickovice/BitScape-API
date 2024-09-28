@@ -39,10 +39,6 @@ export class CategoriesService {
     return this.categoryRepo.find();
   }
 
-  getHello() {
-    return "Hola! Esta es la seccion de categorias";
-  }
-
   
 
 
