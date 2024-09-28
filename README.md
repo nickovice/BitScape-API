@@ -4,9 +4,9 @@
 
 # Work in Progress...
 
-## Endpoints:
-
 ## API Endpoints
+
+### PRODUCTS
 
 ### 1. GET /api/products
 - **Description**: Returns all products.
@@ -31,6 +31,23 @@
 
 ### 8. DELETE /api/products/:id
 - **Description**: Deletes a product by ID.
+
+### CATEGORIES
+
+### 1. GET /categories
+- **Description**: Retrieves all categories.
+
+### 2. GET /categories/:id
+- **Description**: Retrieves a specific category by ID.
+
+### 3. POST /categories
+- **Description**: Creates a new category.
+
+### 4. PUT /categories/:id
+- **Description**: Updates a category by ID.
+
+### 5. DELETE /categories/:id
+- **Description**: Deletes a category by ID.
 
 
 ## Project setup
