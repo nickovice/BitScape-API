@@ -13,38 +13,36 @@ export class ProductsController {
   getHello(): string {
     return this.productsService.getHello();
   }
-  @Get('filter') //filter? (id, id_category, brand)
-  filter(@Query() filterDto: FilterDto) {
-    return this.productsService.filter(filterDto);
+  @Get('all')
+  findAll() {
+    return this.productsService.findAll();
   }
-
   @Get('search') //search?name
   search(@Query() filterDto: FilterDto) {
     return this.productsService.search(filterDto);
   }
-
+  @Get('filter') //filter? (id_category, brand)
+  filter(@Query() filterDto: FilterDto) {
+    return this.productsService.filter(filterDto);
+  }
   @Get('sort') //sort?id_category=x&sort=asc/desc
   sort(@Query() filterDto: FilterDto) {
     return this.productsService.sort(filterDto);
   }
-
+  @Get(':id')
+  findOne(@Param('id') id: number) {
+    return this.productsService.findOne(id);
+  }
   @Post() //  /products (sin id)
   create(@Body() createProductDto: CreateProductDto) {
     return this.productsService.create(createProductDto);
   }
-
-  @Delete('/:id') //products/id
+  @Delete(':id') //products/id
   delete(@Param('id') id: number) {
     return this.productsService.delete(id);
   }
-
-  @Put('/:id')
+  @Put(':id')
   update(@Param('id') id: number, @Body() updateProductDto: UpdateProductDto) {
     return this.productsService.update(id, updateProductDto);
-  }
-
-  @Get('/:id')
-  findOne(@Param('id') id: number) {
-    return this.productsService.findOne(id);
   }
 }

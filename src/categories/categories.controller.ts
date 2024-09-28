@@ -10,13 +10,13 @@ export class CategoriesController {
     return this.categoriesService.getHello();
   }
 
-  @Get(':id')
-  getCategory(@Param('id') id: string) {
-    return this.categoriesService.getCategory(id);
-  }
-
-  @Get('findAll')
+  @Get('all')
   findAll() {
     return this.categoriesService.findAll();
+  }
+
+  @Get(':id')
+  getCategory(@Param('id') id: number) {
+    return this.categoriesService.filter(id);
   }
 }
