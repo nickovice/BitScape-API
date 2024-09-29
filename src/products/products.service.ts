@@ -96,12 +96,16 @@ export class ProductsService {
     }
   }
 
-  search(filterDto: FilterDto) {
+  async search(filterDto: FilterDto) {
     const { name } = filterDto;
-    return this.productRepo
+    const products = await this.productRepo
       .createQueryBuilder('product')
       .where('product.name ILIKE :name', { name: `%${name}%` })
       .getMany();
+    if (products.length === 0) {
+      return 'No hay resultados para su busqueda';
+    }
+    return products;
   }
 
   async sort(filterDto: FilterDto) {
@@ -116,3 +120,5 @@ export class ProductsService {
 
   }
 }
+
+
