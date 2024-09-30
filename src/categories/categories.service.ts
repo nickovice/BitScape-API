@@ -16,10 +16,24 @@ export class CategoriesService {
     private readonly categoryRepo: Repository<Category>
   ) { }
 
+  private async adjustSequence() {
+    await this.categoryRepo.query(
+        `SELECT setval('category_id_seq', (SELECT COALESCE(MAX(id), 0) FROM category) + 1);`
+    );
+  }
+
   async findByName(name: string): Promise<number> {
     const object = await this.categoryRepo.findOneBy({name:name});
     if (!object) {
       throw new HttpException("Categoria no encontrada", HttpStatus.NOT_FOUND);
+    }
+    return object.id;
+  }
+
+  async getIdByName(name: string): Promise<number> {
+    const object = await this.categoryRepo.findOneBy({name:name});
+    if (!object) {
+      throw new HttpException("Categoria no encotrada. Uso: getid/<nombre>", HttpStatus.NOT_FOUND);
     }
     return object.id;
   }
@@ -42,7 +56,11 @@ export class CategoriesService {
     return this.categoryRepo.find();
   }
 
-  create(createCategoryDto: CreateCategoryDto) {
+  async create(createCategoryDto: CreateCategoryDto) {
+    if (createCategoryDto.id != null) {
+      throw new HttpException('No se debe ingresar un id para crear una categoria', HttpStatus.BAD_REQUEST);
+    }
+    await this.adjustSequence();
     const product = this.categoryRepo.create(createCategoryDto);
     return this.categoryRepo.save(product);
   }
@@ -53,7 +71,10 @@ export class CategoriesService {
       throw new NotFoundException('Categoria no encontrado :(');
     }
     else {
+      await this.adjustSequence();
       this.categoryRepo.delete(id);
+      await this.adjustSequence();
+      return "Categoria borrada :)"
     }
   }
   
@@ -63,6 +84,7 @@ export class CategoriesService {
       throw new NotFoundException('Categoria no encontrada :(');
     }
     else if (
+      !id ||
       !updateCategoryDto.id ||
       !updateCategoryDto.name ||
       !updateCategoryDto.info
@@ -74,8 +96,13 @@ export class CategoriesService {
     ) {
       throw new HttpException('El id debe ser un numero entero', HttpStatus.BAD_REQUEST);
     }
+    else if (updateCategoryDto.id != null) {
+      throw new HttpException('No se debe ingresar un id para actualizar una categoria', HttpStatus.BAD_REQUEST);
+    }
     else {
+      await this.adjustSequence();
       await this.categoryRepo.update(id, updateCategoryDto);
+      await this.adjustSequence();
     }
   }
 
