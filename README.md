@@ -40,13 +40,16 @@
 ### 2. GET  /categories/:name
 - **Description**: Returns a specific category by name.
 
-### 3. POST  /categories
+### 3. GET  /categories/getid/:name
+- **Description**: Returns the id of a category by its name.
+
+### 4. POST  /categories
 - **Description**: Creates a new category.
 
-### 4. PUT  /categories/:id
+### 5. PUT  /categories/:id
 - **Description**: Updates a category by ID.
 
-### 5. DELETE  /categories/:id
+### 6. DELETE  /categories/:id
 - **Description**: Deletes a category by ID.
 
 
