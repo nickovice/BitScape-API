@@ -3,8 +3,8 @@
 </p>
 
 # REST API for the site
-[https://bitscape-api.onrender.com/](https://bitscape-api.onrender.com/)
-Don't use the deploy url, that's for backup
+[https://bitscape-api.onrender.com/](https://bitscape-api.onrender.com/)<br>
+(Don't use the deploy url, that's for backup)
 
 ## Endpoints
 
