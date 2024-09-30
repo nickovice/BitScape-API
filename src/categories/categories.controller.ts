@@ -1,5 +1,5 @@
-// eslint-disable-next-line prettier/prettier
-import { Controller, Get, Param, Post, Body, Delete, Put } from '@nestjs/common';
+/* eslint-disable prettier/prettier */
+import { Controller, Get, Param, Post, Body, Delete, Put, ParseIntPipe } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/createCategory.dto';
 import { UpdateCategoryDto } from './dto/updateCategory.dto';
@@ -11,6 +11,11 @@ export class CategoriesController {
   @Get()
   findAll() {
     return this.categoriesService.findAll();
+  }
+  
+  @Get('/getid/:name')
+  getCategoryId(@Param('name') name: string) {
+    return this.categoriesService.getIdByName(name);
   }
 
   @Get(':name')
@@ -24,13 +29,12 @@ export class CategoriesController {
   }
 
   @Delete(':id') //categories/id
-  delete(@Param('id') id: number) {
+  delete(@Param('id', ParseIntPipe) id: number) {
     return this.categoriesService.delete(id);
   }
 
   @Put(':id')
-  // eslint-disable-next-line prettier/prettier
-  update(@Param('id') id: number, @Body() updateCategoryDto: UpdateCategoryDto) {
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateCategoryDto: UpdateCategoryDto) {
     return this.categoriesService.update(id, updateCategoryDto);
   }
 }
