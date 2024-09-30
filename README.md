@@ -2,9 +2,11 @@
   <a target="blank"><img src="https://i.imgur.com/vDeRbsC.png" width="250" /></a>
 </p>
 
-# Work in Progress...
+# REST API for the site
+[https://bitscape-api.onrender.com/](https://bitscape-api.onrender.com/)
+Don't use the deploy url, that's for backup
 
-## API Endpoints
+## Endpoints
 
 ### PRODUCTS
 
