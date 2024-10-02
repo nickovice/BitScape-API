@@ -21,7 +21,7 @@ export class ProductsService {
 
   private async adjustSequence() {
     await this.productRepo.query(
-        `SELECT setval('product_id_seq', (SELECT COALESCE(MAX(id), 0) FROM product) + 1);`
+      `SELECT setval('product_id_seq', (SELECT COALESCE(MAX(id), 0) FROM product) + 1);`
     );
   }
 
@@ -102,41 +102,59 @@ export class ProductsService {
 
   filter(filterDto: FilterDto): any {
     const { id_category, brand } = filterDto;
-    if (id_category) {
-      return this.filterByCategory(id_category);
+    if (!id_category && !brand) {
+      throw new HttpException('Solicitud incorrecta, debes filtrar por id_category o brand', HttpStatus.BAD_REQUEST);
     }
-    if (brand) {
-      return this.productRepo
-        .createQueryBuilder('product')
-        .where('product.brand ILIKE :brand', { brand: `%${brand}%` })
-        .getMany();
+    else {
+      if (id_category) {
+        return this.filterByCategory(id_category);
+      }
+      if (brand) {
+        return this.productRepo
+          .createQueryBuilder('product')
+          .where('product.brand ILIKE :brand', { brand: `%${brand}%` })
+          .getMany();
+      }
     }
   }
 
   async search(filterDto: FilterDto) {
     const { name } = filterDto;
-    const products = await this.productRepo
-      .createQueryBuilder('product')
-      .where('product.name ILIKE :name', { name: `%${name}%` })
-      .getMany();
-    if (products.length === 0) {
-      return 'No hay resultados para la busqueda';
+    if (!name) {
+      throw new HttpException('Solicitud incorrecta, debes buscar con el parametro *name*', HttpStatus.BAD_REQUEST);
     }
-    return products;
+    else {
+      const products = await this.productRepo
+        .createQueryBuilder('product')
+        .where('product.name ILIKE :name', { name: `%${name}%` })
+        .getMany();
+      if (products.length === 0) {
+        return 'No hay resultados para la busqueda';
+      }
+      return products;
+    }
   }
 
   async sort(filterDto: FilterDto) {
     const { id_category, sort } = filterDto;
-    const result = await this.filterByCategory(id_category);
-    if (sort != 'asc' && sort != 'desc') {
-      throw new HttpException('Error: El parámetro *sort* debe ser *asc* para orden ascendente o *desc* para orden descendente', HttpStatus.BAD_REQUEST);
+    if (!id_category) {
+      throw new HttpException('Solicitud incorrecta, falta el parametro *id_category*, el cual debe contener el nombre de la categoria', HttpStatus.BAD_REQUEST);
+    }
+    else if (!sort) {
+      throw new HttpException('Solicitud incorrecta, falta el parametro *sort*, el cual debe debe ser *asc* para orden ascendente o *desc* para orden descendente', HttpStatus.BAD_REQUEST);
     }
     else {
-      if (sort === 'asc') {
-        return result.sort((a, b) => a.price - b.price);
+      const result = await this.filterByCategory(id_category);
+      if (sort != 'asc' && sort != 'desc') {
+        throw new HttpException('Error: El parámetro *sort* debe ser *asc* para orden ascendente o *desc* para orden descendente', HttpStatus.BAD_REQUEST);
       }
-      if (sort === 'desc') {
-        return result.sort((a, b) => b.price - a.price);
+      else {
+        if (sort === 'asc') {
+          return result.sort((a, b) => a.price - b.price);
+        }
+        if (sort === 'desc') {
+          return result.sort((a, b) => b.price - a.price);
+        }
       }
     }
   }
