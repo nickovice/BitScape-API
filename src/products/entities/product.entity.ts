@@ -7,12 +7,9 @@ export class Product {
     @PrimaryGeneratedColumn()
     public id: number;
 
-    @Column()
-    public id_category: number;
-
     @ManyToOne(() => Category)
     @JoinColumn({name:'id_category'})
-    category: Category;
+    category: number | Category;
 
     @Column()
     public brand: string;

@@ -80,7 +80,7 @@ export class ProductsService {
   //Filters
 
   findAll() {
-    return this.productRepo.find();
+    return this.productRepo.find({loadRelationIds:true});
   }
 
   async findOne(id: number) {
@@ -93,11 +93,11 @@ export class ProductsService {
 
   async filterByCategory(id_category: string) {
     const result = await this.categoriesService.findByName(id_category);
-    return this.productRepo.findBy({ id_category: result });
+    return this.productRepo.findBy({ category: result });
   }
 
   filterByCategoryId(id_category: any) {
-    return this.productRepo.findBy({ id_category: id_category });
+    return this.productRepo.findBy({ category: id_category });
   }
 
   filter(filterDto: FilterDto): any {
