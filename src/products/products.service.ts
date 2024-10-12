@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { NotFoundException, HttpException, HttpStatus, Injectable, forwardRef, Inject } from '@nestjs/common';
-import { FilterDto } from './dto/filter.dto';
 import { CreateProductDto } from './dto/createProduct.dto';
 import { UpdateProductDto } from './dto/updateProduct.dto';
+import { QueryDto } from './dto/query.dto';
 import { CategoriesService } from '../categories/categories.service';
 import { Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
@@ -25,13 +25,14 @@ export class ProductsService {
     );
   }
 
-  create(createProductDto: CreateProductDto) {
+  async create(createProductDto: CreateProductDto) {
     if (createProductDto.id != null) {
       throw new HttpException('No se debe ingresar un id para crear un producto', HttpStatus.BAD_REQUEST);
     }
     else {
       const product = this.productRepo.create(createProductDto);
-      return this.productRepo.save(product);
+      await this.productRepo.save(product);
+      return { message: `Producto creado con ID ${product.id}` }
     }
   }
 
@@ -43,6 +44,7 @@ export class ProductsService {
     else {
       this.productRepo.delete(id);
       await this.adjustSequence();
+      return { message: 'Producto eliminado' }
     }
   }
 
@@ -53,7 +55,7 @@ export class ProductsService {
     }
     else if (
       !id ||
-      !updateProductDto.id_category ||
+      !updateProductDto.category ||
       !updateProductDto.brand ||
       !updateProductDto.name ||
       !updateProductDto.price ||
@@ -62,7 +64,7 @@ export class ProductsService {
       throw new HttpException('Faltan datos', HttpStatus.BAD_REQUEST);
     }
     else if (
-      typeof updateProductDto.id_category != 'number' ||
+      typeof updateProductDto.category != 'number' ||
       typeof updateProductDto.price != 'number'
     ) {
       throw new HttpException('La categoria y el id deben ser numeros enteros', HttpStatus.BAD_REQUEST);
@@ -73,6 +75,7 @@ export class ProductsService {
     else {
       await this.productRepo.update(id, updateProductDto);
       await this.adjustSequence();
+      return { message: 'Producto actualizado' }
     }
   }
 
@@ -80,84 +83,77 @@ export class ProductsService {
   //Filters
 
   findAll() {
-    return this.productRepo.find({loadRelationIds:true});
+    return this.productRepo.find({ loadRelationIds: true });
   }
 
   async findOne(id: number) {
-    const product = await this.productRepo.findOne({where: {id}, relations:{category:true}});
+    const product = await this.productRepo.findOne({ where: { id }, relations: { category: true } });
     if (!product) {
       throw new NotFoundException(`Producto no encontrado :(`);
     }
     return product;
   }
 
-  async filterByCategory(id_category: string) {
-    const result = await this.categoriesService.findByName(id_category);
-    return this.productRepo.findBy({ category: result });
+  async filterByCategory(categoryName: string) {
+    const category = await this.categoriesService.findByName(categoryName);
+    return this.productRepo.find({
+      where: { category },
+      loadRelationIds: true, // Solo devuelve el ID de las relaciones
+    });
   }
 
   filterByCategoryId(id_category: any) {
     return this.productRepo.findBy({ category: id_category });
   }
 
-  filter(filterDto: FilterDto): any {
-    const { id_category, brand } = filterDto;
-    if (!id_category && !brand) {
-      throw new HttpException('Solicitud incorrecta, debes filtrar por id_category o brand', HttpStatus.BAD_REQUEST);
-    }
-    else {
-      if (id_category) {
-        return this.filterByCategory(id_category);
-      }
-      if (brand) {
-        return this.productRepo
+  categoryQuery(queryDto: QueryDto): any {
+    const { category } = queryDto;
+    return this.filterByCategory(category);
+  }
+
+  async brandQuery(queryDto: QueryDto) {
+    const { brand } = queryDto;
+    const result = await this.productRepo
           .createQueryBuilder('product')
           .where('product.brand ILIKE :brand', { brand: `%${brand}%` })
+          .loadAllRelationIds()
           .getMany();
-      }
+    if (result.length === 0) {
+      throw new NotFoundException('No hay resultados para la busqueda');
+    }
+    else {
+      return result
     }
   }
 
-  async search(filterDto: FilterDto) {
-    const { name } = filterDto;
-    if (!name) {
-      throw new HttpException('Solicitud incorrecta, debes buscar con el parametro *name*', HttpStatus.BAD_REQUEST);
+  async search(queryDto: QueryDto) {
+    const { search } = queryDto;
+    const products = await this.productRepo
+      .createQueryBuilder('product')
+      .where('product.name ILIKE :name', { name: `%${search}%` })
+      .loadAllRelationIds()
+      .getMany();
+    if (products.length === 0) {
+      throw new NotFoundException('No hay resultados para la busqueda');
     }
-    else {
-      const products = await this.productRepo
-        .createQueryBuilder('product')
-        .where('product.name ILIKE :name', { name: `%${name}%` })
-        .getMany();
-      if (products.length === 0) {
-        return 'No hay resultados para la busqueda';
-      }
-      return products;
-    }
+    return products;
+
   }
 
-  async sort(filterDto: FilterDto) {
-    const { id_category, sort } = filterDto;
-    if (!id_category) {
-      throw new HttpException('Solicitud incorrecta, falta el parametro *id_category*, el cual debe contener el nombre de la categoria', HttpStatus.BAD_REQUEST);
+  async sort(queryDto: QueryDto) {
+    const { category, sort } = queryDto;
+    const result = await this.filterByCategory(category);
+    if (sort !== 'asc' && sort !== 'desc') {
+      throw new HttpException('Error: El parámetro *sort* debe ser *asc* para orden ascendente o *desc* para orden descendente', HttpStatus.BAD_REQUEST);
     }
-    else if (!sort) {
-      throw new HttpException('Solicitud incorrecta, falta el parametro *sort*, el cual debe debe ser *asc* para orden ascendente o *desc* para orden descendente', HttpStatus.BAD_REQUEST);
+    if (sort === 'asc') {
+      return result.sort((a, b) => a.price - b.price);
     }
-    else {
-      const result = await this.filterByCategory(id_category);
-      if (sort != 'asc' && sort != 'desc') {
-        throw new HttpException('Error: El parámetro *sort* debe ser *asc* para orden ascendente o *desc* para orden descendente', HttpStatus.BAD_REQUEST);
-      }
-      else {
-        if (sort === 'asc') {
-          return result.sort((a, b) => a.price - b.price);
-        }
-        if (sort === 'desc') {
-          return result.sort((a, b) => b.price - a.price);
-        }
-      }
+    if (sort === 'desc') {
+      return result.sort((a, b) => b.price - a.price);
     }
   }
+  
 }
 
 

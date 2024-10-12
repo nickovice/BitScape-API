@@ -9,6 +9,21 @@
             "database": "bitscape",
             "username": "postgres",
             "password": "123456"
+        },
+        {
+            "pgOptions": {
+                "ssl": {
+                    "rejectUnauthorized": true
+                }
+            },
+            "previewLimit": 50,
+            "server": "dpg-crs6ch56l47c73csrjlg-a.virginia-postgres.render.com",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "BitScape API Render",
+            "database": "bitscape",
+            "username": "nico",
+            "password": "15U35PnorRny2E94xn1ruUW7O0eGaiPW"
         }
     ]
 }
