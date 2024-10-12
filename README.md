@@ -4,7 +4,6 @@
 
 # REST API for the site
 [https://bitscape-api.onrender.com/](https://bitscape-api.onrender.com/)<br><br>
-(Don't use the deployment url, that's for backup)
 
 ## Endpoints
 
@@ -13,25 +12,28 @@
 ### 1. GET /products
 - **Description**: Returns all products.
 
-### 2. GET /products/search?name={name}
+### 2. GET /products?search={name}
 - **Description**: Searches for products by name.
 
-### 3. GET /products/filter?id_category={id} or brand={brand}
-- **Description**: Filters products by category or brand.
+### 3. GET /products?category={id}
+- **Description**: Filters products by category.
 
-### 4. GET /products/sort?id_category={id}&sort={asc/desc}
-- **Description**: Sorts products by category and ascending/descending order.
+### 4. GET /products?brand={brand}
+- **Description**: Filters products by brand.
 
-### 5. GET /products/:id
+### 5. GET /products?category={category}&sort={asc/desc}
+- **Description**: Sorts products of a certain category by ascending/descending order.
+
+### 6. GET /products/:id
 - **Description**: Returns a product by ID.
 
-### 6. POST /products
+### 7. POST /products
 - **Description**: Creates a new product. It's not necessary to put id on body
 
-### 7. PUT /products/:id
+### 8. PUT /products/:id
 - **Description**: Updates a product by ID.
 
-### 8. DELETE /products/:id
+### 9. DELETE /products/:id
 - **Description**: Deletes a product by ID.
 
 ### CATEGORIES
@@ -42,7 +44,7 @@
 ### 2. GET  /categories/:name
 - **Description**: Returns a specific category by name.
 
-### 3. GET  /categories/getid/:name
+### 3. GET  /categories?getid={name}
 - **Description**: Returns the id of a category by its name.
 
 ### 4. POST  /categories
