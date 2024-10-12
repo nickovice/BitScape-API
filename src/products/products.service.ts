@@ -30,7 +30,10 @@ export class ProductsService {
       throw new HttpException('No se debe ingresar un id para crear un producto', HttpStatus.BAD_REQUEST);
     }
     else {
-      const product = this.productRepo.create(createProductDto);
+      const product = this.productRepo.create({
+        ...createProductDto,
+        category: createProductDto.category, 
+      });
       await this.productRepo.save(product);
       return { message: `Producto creado con ID ${product.id}` }
     }
