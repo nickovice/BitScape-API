@@ -29,15 +29,31 @@ export class ProductsService {
     if (createProductDto.id != null) {
       throw new HttpException('No se debe ingresar un id para crear un producto', HttpStatus.BAD_REQUEST);
     }
+    else if (
+      !createProductDto.category ||
+      !createProductDto.brand ||
+      !createProductDto.name ||
+      !createProductDto.price ||
+      !createProductDto.info
+    ) {
+      throw new HttpException('Faltan datos', HttpStatus.BAD_REQUEST);
+    }
+    else if (
+      typeof createProductDto.category != 'number' ||
+      typeof createProductDto.price != 'number'
+    ) {
+      throw new HttpException('La categoria y el precio deben ser numeros enteros', HttpStatus.BAD_REQUEST);
+    }
     else {
       const product = this.productRepo.create({
         ...createProductDto,
-        category: createProductDto.category, 
+        category: createProductDto.category,
       });
       await this.productRepo.save(product);
       return { message: `Producto creado con ID ${product.id}` }
     }
   }
+
 
   async delete(id: number) {
     const product = await this.productRepo.findOneBy({ id: id });
@@ -105,8 +121,8 @@ export class ProductsService {
     });
   }
 
-  filterByCategoryId(id_category: any) {
-    return this.productRepo.findBy({ category: id_category });
+  async filterByCategoryId(id_category: any) {
+    return await this.productRepo.findBy({ category: id_category });
   }
 
   categoryQuery(queryDto: QueryDto): any {
@@ -117,10 +133,10 @@ export class ProductsService {
   async brandQuery(queryDto: QueryDto) {
     const { brand } = queryDto;
     const result = await this.productRepo
-          .createQueryBuilder('product')
-          .where('product.brand ILIKE :brand', { brand: `%${brand}%` })
-          .loadAllRelationIds()
-          .getMany();
+      .createQueryBuilder('product')
+      .where('product.brand ILIKE :brand', { brand: `%${brand}%` })
+      .loadAllRelationIds()
+      .getMany();
     if (result.length === 0) {
       throw new NotFoundException('No hay resultados para la busqueda');
     }
@@ -156,7 +172,7 @@ export class ProductsService {
       return result.sort((a, b) => b.price - a.price);
     }
   }
-  
+
 }
 
 
