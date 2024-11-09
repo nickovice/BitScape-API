@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Injectable, forwardRef, Inject, HttpException, HttpStatus, NotFoundException, ConflictException } from "@nestjs/common";
+import { Injectable, forwardRef, Inject, HttpException, HttpStatus, NotFoundException } from "@nestjs/common";
 import { ProductsService } from "../products/products.service";
 import { Repository } from 'typeorm';
 import { Category } from './entities/category.entity';
@@ -83,17 +83,13 @@ export class CategoriesService {
   async delete(id: number) {
     const category = await this.categoryRepo.findOneBy({ id: id });
     if (!category) {
-      throw new NotFoundException('Categoría no encontrada :(');
+      throw new NotFoundException('Categoria no encontrada :(');
     }
-    const productsInCategory = await this.productsService.filterByCategoryId(id);
-    if (productsInCategory.length  === 0) {
-    await this.adjustSequence();
-    await this.categoryRepo.delete(id);
-    await this.adjustSequence();
-    return { message: 'Categoría borrada' };
-    } 
     else {
-      throw new ConflictException('No se puede borrar la categoría, contiene productos.');
+      await this.adjustSequence();
+      this.categoryRepo.delete(id);
+      await this.adjustSequence();
+      return { message: "Categoria borrada" }
     }
   }
   
