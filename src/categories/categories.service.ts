@@ -37,14 +37,14 @@ export class CategoriesService {
       if (!object) {
         throw new HttpException("Categoria no encotrada. Uso: getid/<nombre>", HttpStatus.NOT_FOUND);
       }
-      return { message: object.id};
+      return { message: object.id };
     }
     else {
       const object = await this.categoryRepo.findOneBy({ name: queryDto.getid });
       if (!object) {
         throw new HttpException("Categoria no encotrada. Uso: getid/<nombre>", HttpStatus.NOT_FOUND);
       }
-      return { message: object.id};
+      return { message: object.id };
     }
   }
 
@@ -63,7 +63,11 @@ export class CategoriesService {
   }
 
   findAll() {
-    return this.categoryRepo.find();
+    return this.categoryRepo.find({
+      order: {
+        id: 'ASC',
+      },
+    });
   }
 
   async create(createCategoryDto: CreateCategoryDto) {
