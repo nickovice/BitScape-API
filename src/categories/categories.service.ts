@@ -86,14 +86,15 @@ export class CategoriesService {
       throw new NotFoundException('Categoría no encontrada :(');
     }
     const productsInCategory = await this.productsService.filterByCategoryId(id);
-    if (productsInCategory.length > 0) {
-      throw new ConflictException('No se puede borrar la categoría, contiene productos.');
-    } 
+    if (productsInCategory.length  === 0) {
     await this.adjustSequence();
     await this.categoryRepo.delete(id);
     await this.adjustSequence();
-  
     return { message: 'Categoría borrada' };
+    } 
+    else {
+      throw new ConflictException('No se puede borrar la categoría, contiene productos.');
+    }
   }
   
   
