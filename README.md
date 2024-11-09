@@ -3,7 +3,7 @@
 </p>
 
 # REST API for the site
-
+https://bitscape-api.onrender.com
 
 ## Endpoints
 
