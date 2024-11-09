@@ -102,8 +102,12 @@ export class ProductsService {
   //Filters
 
   findAll() {
-    return this.productRepo.find({ loadRelationIds: true });
+    return this.productRepo.find({
+      loadRelationIds: true,
+      order: { id: 'ASC' }, // Esto ordena por el ID de manera ascendente
+    });
   }
+  
 
   async findOne(id: number) {
     const product = await this.productRepo.findOne({ where: { id }, relations: { category: true } });
