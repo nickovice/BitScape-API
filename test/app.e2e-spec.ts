@@ -7,6 +7,9 @@ describe('AppController (e2e)', () => {
   let app: INestApplication;
 
   beforeEach(async () => {
+    // Set test environment
+    process.env.NODE_ENV = 'test';
+
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [HomeModule],
     }).compile();
@@ -19,6 +22,10 @@ describe('AppController (e2e)', () => {
     return request(app.getHttpServer())
       .get('/')
       .expect(200)
-      .expect('Hello World!');
+      .expect((res) => {
+        expect(res.text).toContain('Hola!');
+        expect(res.text).toContain('Llegaste a la API del sitio');
+        expect(res.text).toContain('<html>');
+      });
   });
 });
