@@ -2,13 +2,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from '../src/products/entities/product.entity';
 import { Category } from '../src/categories/entities/category.entity';
-import databaseConfig from '../src/config/database.config';
-
-export const TestConfigModule = ConfigModule.forRoot({
-  isGlobal: true,
-  load: [databaseConfig],
-  envFilePath: ['.env.test', '.env'], // Load test env first, fallback to regular .env
-});
 
 export const TestDatabaseModule = TypeOrmModule.forRootAsync({
   imports: [ConfigModule],
