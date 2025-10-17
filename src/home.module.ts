@@ -9,12 +9,17 @@ import { Product } from './products/entities/product.entity';
 import { Category } from './categories/entities/category.entity';
 import databaseConfig from './config/database.config';
 
+const envFiles =
+  process.env.NODE_ENV === 'test'
+    ? ['.env.test', '.env.local']
+    : ['.env.local', '.env'];
+
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       load: [databaseConfig],
-      envFilePath: ['.env.local', '.env'],
+      envFilePath: envFiles,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
