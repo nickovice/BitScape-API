@@ -14,9 +14,11 @@ export const TestDatabaseModule = TypeOrmModule.forRootAsync({
     database: configService.get<string>('database.database'),
     ssl: configService.get<boolean>('database.ssl'),
     entities: [Product, Category],
-    synchronize: true,
-    // Don't drop schema, just clean data in tests
-    logging: false, // Disable logging in tests
+  synchronize: true,
+  // Drop and recreate schema for each test run to avoid leftover DB types/objects
+  dropSchema: true,
+  // Don't keep verbose SQL logging during tests
+  logging: false,
   }),
   inject: [ConfigService],
 });
