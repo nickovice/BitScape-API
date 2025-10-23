@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./BitScape-API
+        working-directory: .
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -52,7 +52,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./BitScape-API
+        working-directory: .
 
     steps:
       - name: Checkout repository
