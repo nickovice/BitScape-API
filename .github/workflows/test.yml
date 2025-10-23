@@ -42,13 +42,15 @@ jobs:
           POSTGRES_PASSWORD: postgres123
           POSTGRES_DB: test
         options: >-
-          --health-cmd "pg_isready -U test"
+          --health-cmd "pg_isready -U postgres"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
 
     env:
       DATABASE_URL: postgres://postgres:postgres123@localhost:5432/test
+      NODE_ENV: test
+      TYPEORM_SSL: false
 
     defaults:
       run:
