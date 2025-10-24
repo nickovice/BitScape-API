@@ -21,22 +21,30 @@ const envFiles =
       load: [databaseConfig],
       envFilePath: envFiles,
     }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        type: configService.get<'postgres'>('database.type'),
-        host: configService.get<string>('database.host'),
-        port: configService.get<number>('database.port'),
-        username: configService.get<string>('database.username'),
-        password: configService.get<string>('database.password'),
-        database: configService.get<string>('database.database'),
-        ssl: configService.get<boolean>('database.ssl'),
-        synchronize: configService.get<boolean>('database.synchronize'),
-        logging: configService.get<boolean>('database.logging'),
-        entities: [Product, Category],
-      }),
-      inject: [ConfigService],
-    }),
+    // In test environment we use a dedicated TestDatabaseModule to control
+    // TypeORM behavior (dropSchema, test DB). Skip registering the global
+    // TypeOrmModule here during tests to avoid double initialization which
+    // can cause duplicate Postgres type creation errors.
+    ...(process.env.NODE_ENV === 'test'
+      ? []
+      : [
+          TypeOrmModule.forRootAsync({
+            imports: [ConfigModule],
+            useFactory: (configService: ConfigService) => ({
+              type: configService.get<'postgres'>('database.type'),
+              host: configService.get<string>('database.host'),
+              port: configService.get<number>('database.port'),
+              username: configService.get<string>('database.username'),
+              password: configService.get<string>('database.password'),
+              database: configService.get<string>('database.database'),
+              ssl: configService.get<boolean>('database.ssl'),
+              synchronize: configService.get<boolean>('database.synchronize'),
+              logging: configService.get<boolean>('database.logging'),
+              entities: [Product, Category],
+            }),
+            inject: [ConfigService],
+          }),
+        ]),
     ProductsModule,
     CategoriesModule,
   ],
