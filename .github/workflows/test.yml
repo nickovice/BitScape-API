@@ -25,8 +25,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run unit tests
-        run: npm run test
+      - name: Run unit tests (CI)
+        run: npm run test:ci
 
   e2e:
     name: Run e2e tests
@@ -69,7 +69,10 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          npm ci
+          # install client utilities so we can use pg_isready
+          sudo apt-get update && sudo apt-get install -y postgresql-client
 
       - name: Wait for DB
         run: |
@@ -81,10 +84,10 @@ jobs:
           # Small extra delay to allow DB to finish init tasks
           sleep 1
 
-      - name: Run e2e tests
-        run: npm run test:e2e
+      - name: Run e2e tests (CI)
+        run: npm run test:e2e:ci
       
-      - name: Upload coverage reports to Codecov
+  - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
