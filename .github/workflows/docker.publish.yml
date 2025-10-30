@@ -36,7 +36,8 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:latest
-            ghcr.io/${{ github.repository }}:${{ github.sha }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/bitscape:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/bitscape:${{ github.sha }}
+            ghcr.io/nickovice/bitscape-api:latest
+            ghcr.io/nickovice/bitscape-api:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/bitscape-api:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/bitscape-api:${{ github.sha }}
+            
