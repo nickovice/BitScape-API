@@ -7,7 +7,7 @@ async function bootstrap() {
   app.enableCors();
 
   const configService = app.get(ConfigService);
-  const port = configService.get<number>('PORT') || 3000;
+  const port = 3000;
   const nodeEnv = configService.get<string>('NODE_ENV') || process.env.NODE_ENV;
   // Small informative log
   console.log(`Starting app in environment=${nodeEnv} on port=${port}`);
