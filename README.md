@@ -88,3 +88,26 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
+
+## Environment variables and running per-environment
+
+This project loads environment files based on NODE_ENV. Files checked (in order):
+
+- `.env.<NODE_ENV>` (e.g. `.env.development`, `.env.production`)
+- `.env.local` (optional local overrides)
+- `.env` (base defaults)
+
+Examples included: `.env.development` and `.env.production` (DO NOT put real production credentials in the repo).
+
+Usage examples:
+
+```bash
+# Run in development (loads .env.development)
+NODE_ENV=development npm run start:dev
+
+# Build and run production (loads .env.production)
+npm run build
+NODE_ENV=production npm run start:prod
+```
+
+For production, prefer Docker secrets, environment injection from your cloud provider, or a secrets manager rather than committing credentials to files in the repository.

@@ -87,7 +87,7 @@ export class CategoriesService {
     }
     else {
       await this.adjustSequence();
-      this.categoryRepo.delete(id);
+      await this.categoryRepo.delete(id);
       await this.adjustSequence();
       return { message: "Categoria borrada" }
     }
@@ -112,7 +112,10 @@ export class CategoriesService {
     }
     else {
       await this.adjustSequence();
-      await this.categoryRepo.update(id, updateCategoryDto);
+      // Exclude the id field from the update object
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { id: _dtoId, ...updateData } = updateCategoryDto;
+      await this.categoryRepo.update(id, updateData);
       await this.adjustSequence();
       return { message: "Categoria actualizada" }
     }
