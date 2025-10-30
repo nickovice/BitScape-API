@@ -9,10 +9,13 @@ import { Product } from './products/entities/product.entity';
 import { Category } from './categories/entities/category.entity';
 import databaseConfig from './config/database.config';
 
-const envFiles =
-  process.env.NODE_ENV === 'test'
-    ? ['.env.test', '.env.local']
-    : ['.env.local', '.env'];
+const envFiles = (() => {
+  const nodeEnv = process.env.NODE_ENV;
+  const files: string[] = [];
+  if (nodeEnv) files.push(`.env.${nodeEnv}`); // .env.development or .env.production
+  files.push('.env.local', '.env');
+  return files;
+})();
 
 @Module({
   imports: [
@@ -21,11 +24,11 @@ const envFiles =
       load: [databaseConfig],
       envFilePath: envFiles,
     }),
-    // In test environment we use a dedicated TestDatabaseModule to control
-    // TypeORM behavior (dropSchema, test DB). Skip registering the global
-    // TypeOrmModule here during tests to avoid double initialization which
-    // can cause duplicate Postgres type creation errors.
-    ...(process.env.NODE_ENV === 'test'
+    // For test runs we may want to skip registering the global TypeOrmModule
+    // (tests can register a TestDatabaseModule instead). Use the explicit
+    // env var `SKIP_GLOBAL_TYPEORM=true` during tests to avoid double
+    // initialization which can cause duplicate Postgres type creation errors.
+    ...(process.env.SKIP_GLOBAL_TYPEORM === 'true'
       ? []
       : [
           TypeOrmModule.forRootAsync({
