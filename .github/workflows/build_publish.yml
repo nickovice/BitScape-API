@@ -1,4 +1,4 @@
-name: Build and Publish Docker Images
+name: Build, publish Docker Images and Deploy to Render
 
 on:
   push:
@@ -40,4 +40,8 @@ jobs:
             ghcr.io/nickovice/bitscape-api:${{ github.sha }}
             ${{ secrets.DOCKERHUB_USERNAME }}/bitscape-api:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/bitscape-api:${{ github.sha }}
+
+      - name: Trigger Render deploy
+        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
+
             
