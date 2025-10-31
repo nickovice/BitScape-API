@@ -8,6 +8,10 @@ export default registerAs('database', () => ({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
   ssl: process.env.TYPEORM_SSL === 'true',
-  synchronize: process.env.NODE_ENV !== 'production',
+  // Allow explicit override via TYPEORM_SYNCHRONIZE. If unset, fall back to
+  // enabling synchronize for non-production environments only.
+  synchronize: process.env.TYPEORM_SYNCHRONIZE
+    ? process.env.TYPEORM_SYNCHRONIZE === 'true'
+    : process.env.NODE_ENV !== 'production',
   logging: process.env.NODE_ENV === 'development',
 }));
