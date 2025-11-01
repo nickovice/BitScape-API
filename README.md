@@ -57,6 +57,15 @@ https://bitscape-api.onrender.com <br>
 - **Description**: Deletes a category by ID.
 
 
+## Docker Usage
+
+Run
+```bash
+$ docker compose up
+```
+
+Adjust environment variables to use another database
+
 ## Project setup
 
 ```bash
@@ -91,13 +100,11 @@ $ npm run test:cov
 
 ## Environment variables and running per-environment
 
-This project loads environment files based on NODE_ENV. Files checked (in order):
+This project loads environment files based on NODE_ENV:
 
-- `.env.<NODE_ENV>` (e.g. `.env.development`, `.env.production`)
-- `.env.local` (optional local overrides)
-- `.env` (base defaults)
+- `.env.development`
+- `.env.production`
 
-Examples included: `.env.development` and `.env.production` (DO NOT put real production credentials in the repo).
 
 Usage examples:
 
