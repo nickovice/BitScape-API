@@ -66,6 +66,11 @@ $ docker compose up
 
 Adjust environment variables to use another database
 
+## Kubernetes Usage
+
+First, deploy the database and then the API. Use `kubectl apply -f <folder or files>` \
+Run `kubectl port-forward svc/bitscape-api-svc 3000:80 --address 0.0.0.0` to forward ports to the machine.
+
 ## Project setup
 
 ```bash
