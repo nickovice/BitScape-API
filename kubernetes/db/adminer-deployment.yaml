@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bitscape-adminer
+  labels:
+    app: bitscape-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bitscape-adminer
+  template:
+    metadata:
+      labels:
+        app: bitscape-adminer
+    spec:
+      containers:
+      - name: adminer
+        image: adminer
+        ports:
+        - containerPort: 8080

@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bitscape-db
+  labels:
+    app: bitscape-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bitscape-db
+  template:
+    metadata:
+      labels:
+        app: bitscape-db
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:16
+        ports:
+        - containerPort: 5432
+          name: postgres
+        env:
+        - name: POSTGRES_DB
+          value: "bitscape"
+        - name: POSTGRES_USER
+          value: "bitscape"
+        - name: POSTGRES_PASSWORD
+          value: "bitscape"
+        volumeMounts:
+        - name: bitscape-db-storage
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: bitscape-db-storage
+        persistentVolumeClaim:
+          claimName: bitscape-db-pvc
