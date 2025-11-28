@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bitscape-api
+  labels:
+    app: bitscape-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: bitscape-api
+  template:
+    metadata:
+      labels:
+        app: bitscape-api
+    spec:
+      containers:
+      - name: bitscape-api
+        image: ghcr.io/nickovice/bitscape-api:latest
+        ports:
+        - containerPort: 3000
+          name: http
+        env:
+        - name: DB_TYPE
+          value: "postgres"
+        - name: DB_HOST
+          value: "bitscape-db-svc"
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_NAME
+          value: "bitscape"
+        - name: DB_USERNAME
+          value: "bitscape"
+        - name: DB_PASSWORD
+          value: "bitscape"
+        - name: TYPEORM_SSL
+          value: "false"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "712Mi"
+            cpu: "1"
